@@ -1,0 +1,71 @@
+<html>
+<title>Google Map</title>	
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+<style type="text/css">
+	#map {
+	    height:420px;
+	    width:600px;
+	}
+	.infoWindowContent {
+	    font-size:  14px !important;
+	    border-top: 1px solid #ccc;
+	    padding-top: 10px;
+	}
+	h2 {
+	    margin-bottom:0;
+	    margin-top: 0;
+	}
+</style>
+</head>
+
+<body>      
+
+<div ng-app="mapsApp">
+	<map></map>
+</div>
+
+<script type="text/javascript">
+
+//Angular App Module and Controller
+angular.module('mapsApp', [])
+.controller('MapCtrl', function ($scope) {
+
+	$scope.map = new google.maps.Map(document.getElementById('map'), {
+	    zoom: 13,
+	    center: {lat: 28.6182, lng: 77.2233}
+	  });
+
+	$scope.marker = new google.maps.Marker({
+	    map: $scope.map,
+	    draggable: true,
+	    animation: google.maps.Animation.DROP,
+	    position: {lat: 28.6184, lng: 77.2230},
+	    title: 'My Location'
+	  });
+	$scope.marker.addListener('click', function(){
+			if ($scope.marker.getAnimation() !== null) {
+		      	$scope.marker.setAnimation(null);
+		    } else {
+		      $scope.marker.setAnimation(google.maps.Animation.BOUNCE);
+		      $scope.lat   = $scope.marker.getPosition().lat(); 
+		      $scope.longs = $scope.marker.getPosition().lng();
+		      console.log('lat=>'+$scope.lat, 'long=>'+$scope.longs);
+		    }
+		}
+	);
+})
+.directive('map', function(){
+	return{
+		restrict: 'EAC',
+		controller: 'MapCtrl',
+		template: '<div id="map"></div>'
+	}
+});
+
+</script>
+
+</body>
+</html>
